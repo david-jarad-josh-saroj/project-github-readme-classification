@@ -1,18 +1,25 @@
-# Title
-By {your_name}
+# Predicting GitHub Repo Programming Language
+By David Schneeman, Jarad Angel, Joshua Mayes, and Saroj Duwal
 
 ## Readme Outline
 - [Project Description](#project_desc)  
-    - 
-- [Project Planning](#plan)  
-    - 
-- [Data Exploration](#explore)  
+    - [Scenario](#scenario)
+    - [Goals](#goals)
+        - [Deliverables](#deliverables)
+    - [Project Dependencies](#dependencies)
+
+<!-- - [Project Planning](#plan)   -->
+
+- [About the data](#data)
+    - Scope
+    - Acquiring
+    - Preparing
     - Data Dictionary
-    - Key Findings
 
 
 
 # About the project <a name="project_desc"></a>
+Using the text of the README files, this project aims to predict the most popular coding language present in a repository.
 
 ## Scenario
 
@@ -25,15 +32,16 @@ By {your_name}
 
 ## Goals
 
-{Translate the scenario into a more technical description. "Use machine learning to predict X value within Y margin of error"}
+Classify the dominant project language using machine learning algorithms.  Engineer features from the project's README.md file using TF and IDF, as well as the occurrance of certain keywords inside of a document.
 
 ### Deliverables
 
-{What artifacts, if any, are expected as a result of this project.}
+- Report notebook titled `Report.ipynb`
+- Google Slides presentation consisting of 2-5 content slides.
 
 ## Reproducing this project
 
-{Are there any special considerations one must take to run this project on another machine?  Usually yes.  The most common considerations have been filled out already below.}
+<!-- Add NLTK and the NLTK downloads -->
 
 ### Dependencies
 
@@ -69,8 +77,7 @@ Dependencies can be installed quickly with just a few lines of code.
 
 # About the data
 
-{What is the source of the data?
-What does the data represent? }
+We scraped ~1500 Github repositories from the list of most forked repositories to gather readme files and information from GitHub's language statitics.
 
 ## Scope
 
@@ -78,7 +85,7 @@ What does the data represent? }
 
 ## Acquiring
 
-{Describe how the data is acquired. Provide sources and links.  Were any additonal technologies or scripts used? List them here.}
+Data acquisition used a combination of web-scraping and GitHub's API.
 
 ## Preparing
 
