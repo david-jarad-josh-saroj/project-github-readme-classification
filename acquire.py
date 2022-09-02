@@ -152,8 +152,18 @@ def scrape_github_data() -> List[Dict[str, str]]:
 #     json.dump(data, open("data2.json", "w"), indent=1)
 
 
+def get_data(refresh=False):
+    filename = './data.csv'
+    if refresh or not os.path.isfile(filename):
+        data = scrape_github_data()
+        df = pd.DataFrame(data)
+        df.to_csv(filename, index=False)
+    else:
+        df = pd.read_csv(filename)
+    return df
+
+
 def wrangle_data():
-    data = scrape_github_data()
-    df = pd.DataFrame(data)
+    df = get_data()
 
     return df
