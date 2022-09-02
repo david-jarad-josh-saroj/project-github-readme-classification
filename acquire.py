@@ -72,7 +72,8 @@ def get_github_repos(refresh=False, num_repos = 1500):
 REPOS = get_github_repos()
 
 def github_api_request(url: str) -> Union[List, Dict]:
-    response = requests.get(url, headers=headers)
+    time.sleep(2.005)
+    response = requests.get(url, headers=headers, timeout=4)
     response_data = response.json()
     if response.status_code != 200:
         raise Exception(
