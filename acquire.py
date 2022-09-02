@@ -11,6 +11,11 @@ import json
 from typing import Dict, List, Optional, Union, cast
 import requests
 
+import time
+import random
+from bs4 import BeautifulSoup
+from requests import get
+
 from env import github_token, github_username
 
 # TODO: Make a github personal access token.
@@ -21,7 +26,10 @@ from env import github_token, github_username
 # TODO: Add more repositories to the `REPOS` list below.
 
 REPOS = []
- 
+
+
+
+
 
 headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
 
@@ -29,6 +37,31 @@ if headers["Authorization"] == "token " or headers["User-Agent"] == "":
     raise Exception(
         "You need to follow the instructions marked TODO in this script before trying to use it"
     )
+
+
+def fetch_github_repos(num_pages):
+    items_list = []
+    # to make this simple, we will grab repos with the most forks and with stars > 1
+    # the top pages have the format https://github.com/search?o=desc&p=1&q=stars%3A%3E1&s=forks&type=Repositories
+    # so we need to increment the p= parameter to go to each subsequent page
+    for i in range(1,num_pages+1):
+        # add a sleep amount of random time so that we don't get HTTP 429s
+        time.sleep(random.random())
+        headers = {'User-Agent': 'Codeup Data Science'} # Some websites don't accept the pyhon-requests default user-agent
+        url = f'https://github.com/search?o=desc&p={i}&q=stars%3A%3E1&s=forks&type=Repositories'
+        response = get(url, headers=headers)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # each page has 10 results. Let's loop through and find each instance of page element element = 'a' class = 'v-align-middle'
+        links = soup.find_all('a', class_='v-align-middle')
+        for repo_link in links:
+            time.sleep(random.random())
+            repo_name = repo_link.text
+            # add it to our output array
+            items_list.append(repo_name)
+    return items_list
+
+
 
 
 def github_api_request(url: str) -> Union[List, Dict]:
