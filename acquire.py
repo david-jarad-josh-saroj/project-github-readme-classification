@@ -11,6 +11,9 @@ import json
 from typing import Dict, List, Optional, Union, cast
 import requests
 
+# Data Science libraries
+import pandas as pd
+
 import time
 import random
 from bs4 import BeautifulSoup
@@ -25,26 +28,15 @@ from env import github_token, github_username
 # TODO: Add your github username to your env.py file under the variable `github_username`
 # TODO: Add more repositories to the `REPOS` list below.
 
-REPOS = []
 
-
-
-
-
-headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
-
-if headers["Authorization"] == "token " or headers["User-Agent"] == "":
-    raise Exception(
-        "You need to follow the instructions marked TODO in this script before trying to use it"
-    )
-
-
-def fetch_github_repos(num_pages):
+def fetch_github_repos(num_repos):
     items_list = []
     # to make this simple, we will grab repos with the most forks and with stars > 1
     # the top pages have the format https://github.com/search?o=desc&p=1&q=stars%3A%3E1&s=forks&type=Repositories
     # so we need to increment the p= parameter to go to each subsequent page
-    for i in range(1,num_pages+1):
+    i = 0
+    while len(items_list) < num_repos:
+        i += 1
         # add a sleep amount of random time so that we don't get HTTP 429s
         time.sleep(random.random())
         headers = {'User-Agent': 'Codeup Data Science'} # Some websites don't accept the pyhon-requests default user-agent
@@ -61,6 +53,32 @@ def fetch_github_repos(num_pages):
             items_list.append(repo_name)
     return items_list
 
+# returns a list of github repo names, either from a file on disk or from github using the fetch_github_repos function
+def get_github_repos(refresh=False, num_repos = 1500):
+    # If the cached parameter is false, or the csv file is absent, use github
+    if refresh == True or os.path.isfile('git_urls.csv') == False:
+        # read from github
+        repo_list = fetch_github_repos(num_repos)
+        # and write to the cache file for next time
+        df = pd.DataFrame(repo_list, columns=['repos'])
+        df.to_csv('git_urls.csv', index=False)
+    else:
+        # read from the cache file on disk
+        df = pd.read_csv("git_urls.csv")
+        repo_list = df['repos'].to_list()
+
+    # either way, return the list of repos
+    return repo_list
+
+REPOS = get_github_repos()
+
+
+headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
+
+if headers["Authorization"] == "token " or headers["User-Agent"] == "":
+    raise Exception(
+        "You need to follow the instructions marked TODO in this script before trying to use it"
+    )
 
 
 
@@ -129,6 +147,13 @@ def scrape_github_data() -> List[Dict[str, str]]:
     return [process_repo(repo) for repo in REPOS]
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
+#     data = scrape_github_data()
+#     json.dump(data, open("data2.json", "w"), indent=1)
+
+
+def wrangle_data():
     data = scrape_github_data()
-    json.dump(data, open("data2.json", "w"), indent=1)
+    df = pd.DataFrame(data)
+
+    return df
