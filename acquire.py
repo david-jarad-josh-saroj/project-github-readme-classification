@@ -147,9 +147,9 @@ def scrape_github_data() -> List[Dict[str, str]]:
     return [process_repo(repo) for repo in REPOS]
 
 
-# if __name__ == "__main__":
-#     data = scrape_github_data()
-#     json.dump(data, open("data2.json", "w"), indent=1)
+if __name__ == "__main__":
+    data = scrape_github_data()
+    json.dump(data, open("data2.json", "w"), indent=1)
 
 
 def get_data(refresh=False):
