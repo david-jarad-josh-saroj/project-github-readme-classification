@@ -1,5 +1,5 @@
 # Predicting GitHub Repo Programming Language
-By David Schneeman, Jarad Angel, Joshua Mayes, and Saroj Duwal
+By David Schneemann, Jarad Angel, Joshua Mayes, and Saroj Duwal
 
 ## Readme Outline
 - [Project Description](#project_desc)  
@@ -8,20 +8,19 @@ By David Schneeman, Jarad Angel, Joshua Mayes, and Saroj Duwal
         - [Deliverables](#deliverables)
     - [Project Dependencies](#dependencies)
 
-<!-- - [Project Planning](#plan)   -->
-
 - [About the data](#data)
     - Scope
     - Acquiring
     - Preparing
     - Data Dictionary
 
+- [Project Planning](#plan)  
 
 
 # About the project <a name="project_desc"></a>
 Using the text of the README files, this project aims to predict the most popular coding language present in a repository.
 
-## Scenario
+## Scenario <a name="scenario"></a>
 
 {Describe the use case or business context that is the driver behind the project}
 
@@ -30,16 +29,16 @@ Using the text of the README files, this project aims to predict the most popula
     I want {feature}  
     So that {goal}  
 
-## Goals
+## Goals <a name="goals"></a>
 
-Classify the dominant project language using machine learning algorithms.  Engineer features from the project's README.md file using TF and IDF, as well as the occurrance of certain keywords inside of a document.
+Classify the dominant project language within 80% accuracy using machine learning algorithms.  Engineer features from the project's README.md file using TF and IDF, as well as the occurrance of certain keywords inside of a document.
 
-### Deliverables
+### Deliverables <a name="deliverables"></a>
 
 - Report notebook titled `Report.ipynb`
 - Google Slides presentation consisting of 2-5 content slides.
 
-## Reproducing this project
+## Reproducing this project <a name="requirements"></a>
 
 <!-- Add NLTK and the NLTK downloads -->
 
@@ -74,8 +73,7 @@ Dependencies can be installed quickly with just a few lines of code.
 %pip install sklearn
 ```
 
-
-# About the data
+# About the data <a name="data"></a>
 
 We scraped ~1500 Github repositories from the list of most forked repositories to gather readme files and information from GitHub's language statitics.
 
@@ -92,3 +90,8 @@ Data acquisition used a combination of web-scraping and GitHub's API.
 {How was the data prepared for exploration?  Was any data fabricated through imputing or resampling?}
 
 ## Data Dictionary
+
+
+# Project Planning <a name="plan"></a>
+
+## 

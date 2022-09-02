@@ -15,8 +15,6 @@ import requests
 import pandas as pd
 
 import time
-import random
-from bs4 import BeautifulSoup
 from requests import get
 
 from env import github_token, github_username
@@ -28,29 +26,30 @@ from env import github_token, github_username
 # TODO: Add your github username to your env.py file under the variable `github_username`
 # TODO: Add more repositories to the `REPOS` list below.
 
+headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
+
+if headers["Authorization"] == "token " or headers["User-Agent"] == "":
+    raise Exception(
+        "You need to follow the instructions marked TODO in this script before trying to use it"
+    )
+
 
 def fetch_github_repos(num_repos):
     items_list = []
     # to make this simple, we will grab repos with the most forks and with stars > 1
     # the top pages have the format https://github.com/search?o=desc&p=1&q=stars%3A%3E1&s=forks&type=Repositories
     # so we need to increment the p= parameter to go to each subsequent page
-    i = 0
-    while len(items_list) < num_repos:
-        i += 1
+    page = 0
+    while len(items_list) <= num_repos:
+        page += 1
         # add a sleep amount of random time so that we don't get HTTP 429s
-        time.sleep(random.random())
-        headers = {'User-Agent': 'Codeup Data Science'} # Some websites don't accept the pyhon-requests default user-agent
-        url = f'https://github.com/search?o=desc&p={i}&q=stars%3A%3E1&s=forks&type=Repositories'
-        response = get(url, headers=headers)
-        soup = BeautifulSoup(response.content, 'html.parser')
+        time.sleep(2) # Rate limited to 30/min
+        page += 1
+        url = f'https://api.github.com/search/repositories?q=stars%3A%3E1&s=forks&type=Repositories&p={page}&per_page=100'
+        response = requests.get(url, headers=headers)
+        for item in response.json()['items']:
+            items_list.append(item['full_name'])
 
-        # each page has 10 results. Let's loop through and find each instance of page element element = 'a' class = 'v-align-middle'
-        links = soup.find_all('a', class_='v-align-middle')
-        for repo_link in links:
-            time.sleep(random.random())
-            repo_name = repo_link.text
-            # add it to our output array
-            items_list.append(repo_name)
     return items_list
 
 # returns a list of github repo names, either from a file on disk or from github using the fetch_github_repos function
@@ -71,16 +70,6 @@ def get_github_repos(refresh=False, num_repos = 1500):
     return repo_list
 
 REPOS = get_github_repos()
-
-
-headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
-
-if headers["Authorization"] == "token " or headers["User-Agent"] == "":
-    raise Exception(
-        "You need to follow the instructions marked TODO in this script before trying to use it"
-    )
-
-
 
 def github_api_request(url: str) -> Union[List, Dict]:
     response = requests.get(url, headers=headers)
