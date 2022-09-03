@@ -88,10 +88,14 @@ Data acquisition used a combination of web-scraping and GitHub's API.
 ## Preparing
 
 {How was the data prepared for exploration?  Was any data fabricated through imputing or resampling?}
+- Repositories without a domininat language are captured as nulls. Those were imputed to 'English'.
 
 ## Data Dictionary
 
 
 # Project Planning <a name="plan"></a>
 
-## 
+## Initial Hypotheses
+- If a language is mentioned in the readme it is more likely dominated by that language
+- Topics surrounding web development are more likely written in html, javascript and css
+- Readmes that talk about studying or hiring are likely written in english

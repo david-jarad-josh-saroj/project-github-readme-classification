@@ -9,6 +9,8 @@ To create the `data.json` file that contains the data.
 import os
 import json
 from typing import Dict, List, Optional, Union, cast
+from IPython.display import display
+from ipywidgets import IntProgress
 import requests
 
 # Data Science libraries
@@ -34,30 +36,36 @@ if headers["Authorization"] == "token " or headers["User-Agent"] == "":
     )
 
 
-def fetch_github_repos(num_repos):
-    items_list = []
-    # to make this simple, we will grab repos with the most forks and with stars > 1
-    # the top pages have the format https://github.com/search?o=desc&p=1&q=stars%3A%3E1&s=forks&type=Repositories
-    # so we need to increment the p= parameter to go to each subsequent page
-    page = 0
-    while len(items_list) <= num_repos:
-        page += 1
-        # add a sleep amount of random time so that we don't get HTTP 429s
-        time.sleep(2) # Rate limited to 30/min
-        page += 1
-        url = f'https://api.github.com/search/repositories?q=stars%3A%3E1&s=forks&type=Repositories&p={page}&per_page=100'
-        response = requests.get(url, headers=headers)
-        for item in response.json()['items']:
-            items_list.append(item['full_name'])
+def github_search(query, page):
+    # topic_search_url': 'https://api.github.com/search/topics?q={query}{&page,per_page}',
+    base_url = 'https://api.github.com/'
+    url = f"{base_url}search/repositories?q={query}&page={page}&per_page=100"
+    time.sleep(2)
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        raise Exception(f'Something went wrong. Status {response.status_code}')
+    else:
+        return response.json()
 
-    return items_list
+def new_github_urls():
+    urls = []
+    page = 0
+    f = IntProgress(min=0, max=1000, description='Getting URLs')
+    display(f)
+    while len(urls) <= 900:
+        f.value = len(urls)
+        page += 1
+        items = github_search('stars%3A%3E1&s=forks&type=Repositories', page)['items']
+        for item in items:
+            urls.append(item['full_name'])
+    return urls
 
 # returns a list of github repo names, either from a file on disk or from github using the fetch_github_repos function
-def get_github_repos(refresh=False, num_repos = 1500):
+def get_github_repos(refresh=False ):
     # If the cached parameter is false, or the csv file is absent, use github
     if refresh == True or os.path.isfile('git_urls.csv') == False:
         # read from github
-        repo_list = fetch_github_repos(num_repos)
+        repo_list = new_github_urls()
         # and write to the cache file for next time
         df = pd.DataFrame(repo_list, columns=['repos'])
         df.to_csv('git_urls.csv', index=False)
@@ -72,9 +80,13 @@ def get_github_repos(refresh=False, num_repos = 1500):
 REPOS = get_github_repos()
 
 def github_api_request(url: str) -> Union[List, Dict]:
-    time.sleep(2.005)
-    response = requests.get(url, headers=headers, timeout=4)
+    time.sleep(0.25)
+    print(url)
+    response = requests.get(url, headers=headers, timeout=60)
     response_data = response.json()
+    if int(response.headers['X-RateLimit-Remaining']) < 10:
+        print('Rate-limit exceeded. Slowing down.')
+        time.sleep(60)
     if response.status_code != 200:
         raise Exception(
             f"Error response from github api! status code: {response.status_code}, "
@@ -137,12 +149,18 @@ def scrape_github_data() -> List[Dict[str, str]]:
     """
     Loop through all of the repos and process them. Returns the processed data.
     """
-    return [process_repo(repo) for repo in REPOS]
+    f = IntProgress(min=0, max=len(REPOS), description='Downloading Data')
+    display(f)
+    output = []
+    for i, repo in enumerate(REPOS):
+        f.value = i
+        output.append(process_repo(repo))
+    return output
 
 
-if __name__ == "__main__":
-    data = scrape_github_data()
-    json.dump(data, open("data2.json", "w"), indent=1)
+# if __name__ == "__main__":
+#     data = scrape_github_data()
+#     json.dump(data, open("data2.json", "w"), indent=1)
 
 
 def get_data(refresh=False):
