@@ -91,7 +91,7 @@ def basic_string_clean( string: str,
 
     return string
 
-def make_clean_col(series: pd.Series, **kwargs) -> pd.Series:
+def sanitize(document: str, **kwargs):
     defaultKwargs = {
         'strip': True, 
         'lower': True, 
@@ -103,22 +103,39 @@ def make_clean_col(series: pd.Series, **kwargs) -> pd.Series:
     }
     kwargs = { **defaultKwargs, **kwargs }
 
-    clean = series.apply(basic_string_clean, 
-                        strip=kwargs['strip'], 
-                        lower=kwargs['lower'], 
-                        normalize=kwargs['normalize'], 
-                        drop_special=kwargs['drop_special'], 
-                        drop_punctuation=kwargs['drop_punctuation'] )\
-                            .apply( word_tokenize)\
-                            .apply( remove_stopwords, 
+    document = basic_string_clean(document,
+                                strip=kwargs['strip'], 
+                                lower=kwargs['lower'], 
+                                normalize=kwargs['normalize'], 
+                                drop_special=kwargs['drop_special'], 
+                                drop_punctuation=kwargs['drop_punctuation'])
+                            
+    document = word_tokenize(document)
+
+    document = remove_stopwords(    document,
                                     extra_words=kwargs['extra_words'], 
                                     exclude_words=kwargs['exclude_words'])
-    return clean
 
-def make_ngrams(words, n):
-    if type(words) == pd.core.series.Series:
-        input = ' '.join(words)
-    else:
-        input = words
-    output = input.split(' ')
-    return pd.Series(nltk.ngrams(output, n))
+    return document
+
+def make_ngrams(document, n):
+    if type(document) == pd.core.series.Series:
+        document = ' '.join(document)
+
+    words = document.split(' ')
+    ngrams =  list(nltk.ngrams(words, n))
+    ngrams = ['_'.join(ngram) for ngram in ngrams]
+    out = ' '.join(ngrams)
+    return out
+
+def get_word_freq(document, max=None, min=None):
+    if type(document) != str:
+        document = ' '.join(document)
+    bag =  document.split(' ')
+    series = pd.Series(bag)
+    vc = series.value_counts()
+    if max:
+        vc = vc[vc <= max]
+    if min:
+        vc = vc[vc >= min]
+    return vc

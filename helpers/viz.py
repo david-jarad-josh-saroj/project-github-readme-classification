@@ -14,7 +14,7 @@ def plot_wordcloud_from_freq(freq , figsize=[12,9]):
     plt.axis('off')
     plt.show()
 
-def plot_wordcloud(input , figsize=[12,9]):
+def plot_wordcloud(input , figsize=[12,9], title=None):
     
     from wordcloud import WordCloud
     cloud = WordCloud()
@@ -47,6 +47,8 @@ def plot_wordcloud(input , figsize=[12,9]):
         cloud.generate_from_frequencies(output)
     
     plt.figure(figsize=figsize)
+    if title:
+        plt.title(title)
     plt.imshow(cloud)
     plt.axis('off')
     plt.show()
