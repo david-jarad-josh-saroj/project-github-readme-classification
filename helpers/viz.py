@@ -14,7 +14,7 @@ def plot_wordcloud_from_freq(freq , figsize=[12,9]):
     plt.axis('off')
     plt.show()
 
-def plot_wordcloud(input , figsize=[12,9], title=None):
+def plot_wordcloud(input , figsize=[12,9], title=None, save_path=None):
     
     from wordcloud import WordCloud
     cloud = WordCloud()
@@ -51,6 +51,8 @@ def plot_wordcloud(input , figsize=[12,9], title=None):
         plt.title(title)
     plt.imshow(cloud)
     plt.axis('off')
+    if save_path:
+        plt.savefig(save_path, bbox_inches='tight', dpi=600)
     plt.show()
 
 def get_n_colors(n: int, palette='bright') -> list:
