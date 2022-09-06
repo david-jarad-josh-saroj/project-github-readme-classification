@@ -17,7 +17,7 @@ class BaselineModel:
         """Initializes the model with the aggregation function defined, which will be used for fitting later."""
         self.method = method
 
-    def fit(self, y):
+    def fit(self, x, y):
         """Calculates the baseline for the target variable and assigns it to this instance."""
         if len(y.shape) == 1:
             self.baseline = y.agg(func=self.method)[0]
