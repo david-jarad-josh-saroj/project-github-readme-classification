@@ -13,6 +13,7 @@ from nltk.corpus import stopwords
 # pandas dataframe manipulation, acquire script, time formatting
 import pandas as pd
 import acquire
+from sklearn.model_selection import train_test_split
 
 
 
@@ -75,4 +76,16 @@ def remove_stopwords(text, extra_words = [], exclude_words = []):
     text_without_stopwords = ' '.join(filtered_words)    
     return text_without_stopwords
 
+
+# Splitting the data set via train validate test
+def split_lang(df):
+
+    # split the data on machine failure
+    train_validate, test = train_test_split(df, test_size=.2, 
+                                            random_state=123, 
+                                            stratify=df.language)
+    train, validate = train_test_split(train_validate, test_size=.2, 
+                                       random_state=123, 
+                                       stratify=train_validate.language)
+    return train, validate, test
 
