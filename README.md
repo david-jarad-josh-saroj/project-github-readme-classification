@@ -75,11 +75,11 @@ Dependencies can be installed quickly with just a few lines of code.
 
 # About the data <a name="data"></a>
 
-We scraped ~1500 Github repositories from the list of most forked repositories to gather readme files and information from GitHub's language statitics.
+We scraped ~1000 Github repositories from the list of most forked repositories to gather readme files and information from GitHub's language statitics.
 
 ## Scope
 
-{ How many records/columns? How many nulls? Does this project focus on a particular subset of the overall data? }
+For exploration and modeling we ignored any repositories featuring a language for which we did not scrape at least 10 samples, as well as any repositories that did not feature a language at all.
 
 ## Acquiring
 
@@ -87,8 +87,12 @@ Data acquisition used a combination of web-scraping and GitHub's API.
 
 ## Preparing
 
-{How was the data prepared for exploration?  Was any data fabricated through imputing or resampling?}
-- Repositories without a domininat language are captured as nulls. Those were imputed to 'English'.
+To prepare the data for exploration and modeling we performed the following steps:
+- Markdown links were removed from the corpus since the urls did not provide meaningful information
+- HTML elements such as \<li>\</li> and \<strong>\</strong> were also removed for the same reason
+- The text was then normalized and stripped of special characters
+- Stopwords were removed
+- New columns were created in the dataframe to represent the cleaned and lemmatized versions of the original
 
 ## Data Dictionary
 
