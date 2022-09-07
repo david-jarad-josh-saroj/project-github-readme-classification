@@ -165,8 +165,26 @@ To prepare the data for exploration and modeling we performed the following step
 
 # Conclusion
 ### Summary
-- The most common language used was JavaScript followed by Python.
-- XGBoost classification model was able to outperform and  beat the baseline model by 115 %
+
+In seeking to predict programming language for GitHub repositories, we have explored our data thoroughly. \
+We observed word clouds, word frequencies, and ran sentiment analyses in order to best determine any additional feature engineering that would improve our model. Although we were not able to identify any additional significant features to engineer from this exploration, we were able to identify problem areas and eliminate a host of stopwords which resulted in improved modeling.
+
+Additionally, we have created and tested 12 different models on both uncleaned and cleaned and lemmatized data. Our 3 best performing models are:
+
+1. Neural Network (not explicitly shown in this final notebook)
+2. SVM Linear
+3. XGBoost Classifier
+
+In short, we found that our XGBoost Classifier model performed best on our uncleaned data, resulting in 58% accuracy on our test data. \
+This performance beats our baseline by 115%.
 
 
+### Next Steps
+
+Despite the overall effectiveness of our best-performing model, there is always room for improvement and optimization.
+If given more time to pursue better results, we could perform further investigation within exploration by:
+
+1. Estimating each readme's school reading level. Not only would this be interesting as an anecdote, if proven useful, it could be imputed as a new feature to boost the accuracy of our model.
+
+2. Handling ReadMes in a foreign language in a more succinct way. This could be handled more effectively by using a translator to convert all ReadMes into English for potentially better modeling accuracy. 
 
