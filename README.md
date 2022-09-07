@@ -105,6 +105,8 @@ try:
 except:
     nltk.download('punkt')
 ```
+- env.py module with github token and github username
+
 
 # About the data <a name="data"></a>
 
@@ -116,7 +118,10 @@ For exploration and modeling we ignored any repositories featuring a language fo
 
 ## Acquiring
 
-Data acquisition used a combination of web-scraping and GitHub's API.
+- "env.py" has credentials to access the data from GitHub.com
+- Data acquisition used a combination of web-scraping and GitHub's API from the "acquire.py" module.
+- Acquire module collects repository name, language used and readme contents.
+- 
 
 ## Preparing
 
@@ -126,6 +131,10 @@ To prepare the data for exploration and modeling we performed the following step
 - The text was then normalized and stripped of special characters
 - Stopwords were removed
 - New columns were created in the dataframe to represent the cleaned and lemmatized versions of the original
+- Split the data into train, validate and test sets and stratify by the language
+    - Train : 64 % of the data
+    - Validate : 16 % of the data
+    - Test : 20 % of the data
 
 ## Data Dictionary
 
@@ -139,9 +148,25 @@ To prepare the data for exploration and modeling we performed the following step
 | lemm_readme | Engineered Feature | tokenized_readme after "words" are lemmatized to their root   word |  |  |
 | polarity | Exploration only | Description of lemm_readme's sentiment analysis. A value closer to 1 or   -1 describes a stronger positive or negative sentiment. |  |  |
 
+
 # Project Planning <a name="plan"></a>
+
+## Exploration
 
 ## Initial Hypotheses
 - If a language is mentioned in the readme it is more likely dominated by that language
 - Topics surrounding web development are more likely written in html, javascript and css
 - Readmes that talk about studying or hiring are likely written in english
+
+## Modeling
+- Created a baseline model against which all models will be evaluated.
+- 12 different models were compared against the baseline and model with the highest overall accuracy score was used to evaluate the test data set.
+
+
+# Conclusion
+### Summary
+- The most common language used was JavaScript followed by Python.
+- XGBoost classification model was able to outperform and  beat the baseline model by 115 %
+
+
+
