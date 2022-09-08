@@ -35,8 +35,8 @@ Classify the dominant project language within 80% accuracy using machine learnin
 
 ### Deliverables <a name="deliverables"></a>
 
-- Report notebook titled `Report.ipynb`
-- Google Slides presentation consisting of 2-5 content slides.
+- Report notebook titled `final_notebook.ipynb`
+- [Google Slides presentation](https://docs.google.com/presentation/d/1Rf8zEq8KYNNb-GQ4QRL9cTXdy0_6UnGDS9ANMM3B_rE/edit#slide=id.gc6f9e470d_0_0) consisting of 2-5 content slides.
 
 ## Reproducing this project <a name="requirements"></a>
 
